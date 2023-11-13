@@ -4,6 +4,7 @@ pub mod merkle_root_upload_workflow;
 pub mod reclaim_rent_workflow;
 pub mod stake_meta_generator_workflow;
 
+use std::ops::Add;
 use {
     crate::{
         merkle_root_generator_workflow::MerkleRootGeneratorError,
@@ -505,14 +506,15 @@ pub async fn sign_and_send_transactions_with_retries_multi_rpc(
             .for_each(|txn| transactions_sender.send(txn).unwrap());
         transactions_receiver
     };
+
+    let end = Instant::now().add(max_loop_duration);
     let blockhash_refresh_handle = {
         let blockhash_rpc_client = blockhash_rpc_client.clone();
         let blockhash = blockhash.clone();
         let transactions_receiver = transactions_receiver.clone();
         tokio::spawn(async move {
-            let start = Instant::now();
             let mut last_blockhash_update = Instant::now();
-            while start.elapsed() < max_loop_duration && !transactions_receiver.is_empty() {
+            while Instant::now() < end && !transactions_receiver.is_empty() {
                 // ensure we always have a recent blockhash
                 if last_blockhash_update.elapsed() > Duration::from_secs(2) {
                     let hash = blockhash_rpc_client
@@ -547,7 +549,7 @@ pub async fn sign_and_send_transactions_with_retries_multi_rpc(
                 let mut iterations = 0usize;
                 while let Ok(txn) = transactions_receiver.recv() {
                     let mut retries = 0usize;
-                    while retries < MAX_RETRIES {
+                    while retries < MAX_RETRIES && Instant::now() < end {
                         iterations = iterations.saturating_add(1);
                         let (_signed_txn, res) =
                             signed_send(&signer, &rpc_client, *blockhash.read().await, txn.clone())
