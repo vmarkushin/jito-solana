@@ -2,11 +2,11 @@
 
 #[cfg(not(target_env = "msvc"))]
 use jemallocator::Jemalloc;
+use tokio::runtime::Runtime;
 use {
     clap::{crate_name, value_t, value_t_or_exit, values_t, values_t_or_exit, ArgMatches},
     console::style,
     crossbeam_channel::unbounded,
-    jsonrpc_server_utils::tokio::runtime::Runtime,
     log::*,
     rand::{seq::SliceRandom, thread_rng},
     solana_accounts_db::{
