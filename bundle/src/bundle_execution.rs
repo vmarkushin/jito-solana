@@ -1,4 +1,3 @@
-use solana_svm::transaction_processor::ExecutionRecordingConfig;
 use {
     itertools::izip,
     log::*,
@@ -19,6 +18,7 @@ use {
     },
     solana_svm::{
         account_loader::TransactionLoadResult, account_overrides::AccountOverrides,
+        transaction_processor::ExecutionRecordingConfig,
         transaction_results::TransactionExecutionResult,
     },
     solana_transaction_status::{token_balances::TransactionTokenBalances, PreBalanceInfo},

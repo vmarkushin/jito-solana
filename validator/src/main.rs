@@ -2,7 +2,6 @@
 
 #[cfg(not(target_env = "msvc"))]
 use jemallocator::Jemalloc;
-use tokio::runtime::Runtime;
 use {
     clap::{crate_name, value_t, value_t_or_exit, values_t, values_t_or_exit, ArgMatches},
     console::style,
@@ -89,6 +88,7 @@ use {
         sync::{atomic::AtomicBool, Arc, Mutex, RwLock},
         time::{Duration, SystemTime},
     },
+    tokio::runtime::Runtime,
 };
 
 #[cfg(not(target_env = "msvc"))]
