@@ -1,3 +1,4 @@
+use solana_svm::transaction_processor::ExecutionRecordingConfig;
 use {
     itertools::izip,
     log::*,
@@ -353,12 +354,15 @@ pub fn load_and_execute_bundle<'a>(
             .load_and_execute_transactions(
                 &batch,
                 max_age,
-                enable_cpi_recording,
-                enable_log_recording,
-                enable_return_data_recording,
+                ExecutionRecordingConfig {
+                    enable_cpi_recording,
+                    enable_log_recording,
+                    enable_return_data_recording,
+                },
                 &mut metrics.execute_timings,
                 Some(account_overrides),
                 *log_messages_bytes_limit,
+                true
             ));
         debug!(
             "bundle id: {} loaded_transactions: {:?}",
