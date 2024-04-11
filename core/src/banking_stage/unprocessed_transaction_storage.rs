@@ -1,3 +1,4 @@
+use solana_measure::{measure, measure_us};
 use {
     super::{
         consumer::Consumer,
