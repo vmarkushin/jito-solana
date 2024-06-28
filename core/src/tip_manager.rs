@@ -48,6 +48,9 @@ struct TipPaymentProgramInfo {
     tip_pda_5: (Pubkey, u8),
     tip_pda_6: (Pubkey, u8),
     tip_pda_7: (Pubkey, u8),
+    // tokens_tip_pda_0: Pubkey,
+    // tokens_minter: Pubkey,
+    // tokens_authority: Pubkey,
 }
 
 /// Contains metadata regarding the tip-distribution account.
@@ -135,6 +138,9 @@ impl TipManager {
             Pubkey::find_program_address(&[TIP_ACCOUNT_SEED_6], &tip_payment_program_id);
         let tip_pda_7 =
             Pubkey::find_program_address(&[TIP_ACCOUNT_SEED_7], &tip_payment_program_id);
+        let tokens_tip_pda_0 =
+            Pubkey::find_program_address(&[TOKENS_TIP_ACCOUNT_SEED_0], &tip_payment_program_id);
+        let tokens_minter = Pubkey::new_unique(); // TODO: replace with real minter
 
         let config_pda_and_bump = derive_config_account_address(&tip_distribution_program_id);
 
@@ -150,6 +156,9 @@ impl TipManager {
                 tip_pda_5,
                 tip_pda_6,
                 tip_pda_7,
+                // tokens_tip_pda_0,
+                // tokens_minter,
+                // tokens_authority: (Default::default(), 0),
             },
             tip_distribution_program_info: TipDistributionProgramInfo {
                 program_id: tip_distribution_program_id,
